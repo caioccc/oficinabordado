@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import "@mantine/core/styles.css";
+@import "@mantine/notifications/styles.css";
+
+/* Força o fundo claro e o texto escuro sobrepondo qualquer outra biblioteca */
+html, body {
+  background-color: #FAFAF9 !important; /* Off-white sofisticado */
+  color: #44403C !important;            /* Tom de pedra escuro para o texto */
+}
+
+/* Ajuste opcional: se o Mantine tentar injetar a cor de fundo do body dele */
+root, :root {
+  --mantine-color-body: #FAFAF9 !important;
+}
+
+/* 3. Estilos customizados da sua aplicação */
+body {
+  background-color: #FAFAF9; /* Off-white / warm gray 50 */
+  color: #44403C; /* Stone 700 */
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
