@@ -2,44 +2,34 @@
 @import "@mantine/core/styles.css";
 @import "@mantine/notifications/styles.css";
 
-/* Força o fundo claro e o texto escuro sobrepondo qualquer outra biblioteca */
 html, body {
-  background-color: #FAFAF9 !important; /* Off-white sofisticado */
-  color: #44403C !important;            /* Tom de pedra escuro para o texto */
-}
-
-/* Ajuste opcional: se o Mantine tentar injetar a cor de fundo do body dele */
-root, :root {
-  --mantine-color-body: #FAFAF9 !important;
-}
-
-/* 3. Estilos customizados da sua aplicação */
-body {
-  background-color: #FAFAF9; /* Off-white / warm gray 50 */
-  color: #44403C; /* Stone 700 */
+  background-color: #F7F4EF !important; /* Warm Beige Suave */
+  color: #4A3728 !important;            /* Terracotta Brown Escuro */
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --mantine-color-body: #F7F4EF !important;
+  /* Altera a cor padrão do circuito do Stepper e botões ativos do Mantine para a sua paleta */
+  --mantine-color-rose-filled: #A76D5E !important; 
+  --mantine-color-rose-light: #EAE3D8 !important;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Forçar os textos secundários do Next/Mantine a entrarem na paleta terrosa */
+.text-stone-500, .mantine-Stepper-stepDescription {
+  color: #7A6855 !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.text-stone-400 {
+  color: #9C8A77 !important;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Deixar os inputs com um fundo sutil que combina com a paleta */
+.mantine-Input-input {
+  background-color: #FAF8F5 !important;
+  border-color: #EAE3D8 !important;
+  color: #4A3728 !important;
+}
+
+.mantine-Input-input:focus {
+  border-color: #A76D5E !important;
 }

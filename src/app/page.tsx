@@ -176,11 +176,11 @@ export default function LandingPage() {
     <Container size="sm" className="py-12 px-4 pb-24 md:py-20">
       <Stack align="center" className="mb-12 text-center">
         <Badge
-          color="rose.2"
+          style={{ backgroundColor: "#EAE3D8", color: "#846044" }}
           variant="light"
           size="lg"
           radius="sm"
-          className="text-rose-700 font-semibold px-4 py-1"
+          className="font-semibold px-4 py-1"
         >
           VAGAS EXCLUSIVAS & LIMITADAS
         </Badge>
@@ -268,13 +268,13 @@ export default function LandingPage() {
             </div>
             <Button
               size="lg"
-              color="rose"
               disabled={esgotado}
               onClick={() => {
                 setActiveStep(0);
                 setModalAberto(true);
               }}
-              className="bg-rose-600 hover:bg-rose-700 font-semibold px-8 shadow-sm"
+              style={{ backgroundColor: "#A76D5E" }}
+              className="hover:opacity-90 font-semibold px-8 shadow-sm text-white"
             >
               {esgotado ? "Vagas Esgotadas" : "Garantir Minha Vaga"}
             </Button>
@@ -284,13 +284,13 @@ export default function LandingPage() {
 
       <Stack gap="xs" className="px-2 text-stone-600 mb-12">
         <Group gap="xs">
-          <IconHeart size={16} className="text-rose-400" />
+          <IconHeart size={16} style={{ color: "#98A086" }} />
           <Text size="sm">
             Todo o material incluso (Bastidor, agulhas e meadas).
           </Text>
         </Group>
         <Group gap="xs">
-          <IconHeart size={16} className="text-rose-400" />
+          <IconHeart size={16} style={{ color: "#98A086" }} />
           <Text size="sm">
             Apostila impressa com guia de pontos principais.
           </Text>
