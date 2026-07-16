@@ -137,14 +137,22 @@ export default function LandingPage() {
       const response = await axios.post("/api/checkout", data);
 
       if (response.data.redirectUrl) {
+        localStorage.setItem(
+          "inscricao_dados",
+          JSON.stringify({
+            nome: data.nome,
+            preco: oficina?.preco,
+            redirectUrl: response.data.redirectUrl,
+          }),
+        );
         notifications.show({
           title: "Vaga Reservada!",
-          message: "Redirecionando você para o pagamento seguro...",
+          message: "Escolha sua forma de pagamento...",
           color: "green",
           loading: true,
-          autoClose: 3000,
+          autoClose: 2000,
         });
-        window.location.assign(response.data.redirectUrl);
+        window.location.href = "/pagamento";
       }
     } catch (error: any) {
       notifications.show({
