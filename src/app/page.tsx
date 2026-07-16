@@ -42,6 +42,8 @@ import {
   IconBook2,
   IconArrowRight,
   IconPlayerPlay,
+  IconClock,
+  IconGift,
 } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -494,7 +496,10 @@ export default function LandingPage() {
                       onClick={() => videoRef.current?.play()}
                     >
                       <Center className="w-16 h-16 rounded-full bg-white/80 shadow-lg pointer-events-none">
-                        <IconPlayerPlay size={28} className="text-stone-700 ml-1" />
+                        <IconPlayerPlay
+                          size={28}
+                          className="text-stone-700 ml-1"
+                        />
                       </Center>
                     </Center>
                   )}
@@ -614,7 +619,80 @@ export default function LandingPage() {
       </Container>
 
       {/* ============================================
-          SEÇÃO 7 — FOOTER
+          SEÇÃO 7 — CARD DE FECHAMENTO
+          ============================================ */}
+      <Box className="bg-white/50">
+        <Container size="sm" className="py-16 md:py-24 px-4">
+          <Stack align="center" gap="lg" className="text-center">
+            <Title
+              order={2}
+              className="text-2xl md:text-3xl font-bold text-stone-800"
+            >
+              Sua noite de respiro criativo está a um clique de distância.
+            </Title>
+            <Text className="text-stone-500 max-w-lg text-base leading-relaxed">
+              Não deixe para depois. Como nossas turmas são reduzidas para
+              garantir atenção individual, as vagas costumam esgotar
+              rapidamente.
+            </Text>
+
+            <Card
+              shadow="xl"
+              padding="xl"
+              radius="xl"
+              withBorder
+              className="bg-white border-rose-100 w-full"
+            >
+              <Stack gap="md">
+                <Text
+                  size="sm"
+                  fw={700}
+                  className="text-center animate-pulse"
+                  style={{ color: "#C2410C" }}
+                >
+                  🔥 Restam apenas {oficina.vagas_restantes} vagas disponíveis!
+                </Text>
+
+                <hr className="border-stone-100" />
+
+                <Group justify="center" gap={4}>
+                  <Text
+                    size="xs"
+                    className="text-stone-400 uppercase tracking-wider font-semibold"
+                  >
+                    Valor da Inscrição
+                  </Text>
+                </Group>
+                <Text className="text-3xl font-black text-stone-800 text-center">
+                  R${" "}
+                  {Number(oficina.preco).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </Text>
+
+                <Button
+                  size="lg"
+                  disabled={esgotado}
+                  onClick={() => {
+                    setActiveStep(0);
+                    setModalAberto(true);
+                  }}
+                  style={{ backgroundColor: "#A76D5E" }}
+                  className="hover:opacity-90 font-semibold shadow-sm text-white w-full"
+                  rightSection={<IconArrowRight size={18} />}
+                >
+                  {isMobile
+                    ? "Garantir Minha Vaga"
+                    : "Quero Garantir Minha Vaga Agora"}
+                </Button>
+              </Stack>
+            </Card>
+          </Stack>
+        </Container>
+      </Box>
+
+      {/* ============================================
+          SEÇÃO 8 — FOOTER
           ============================================ */}
       <Box className="border-t border-stone-200 bg-white/50">
         <Container size="md" className="py-10 px-4">
@@ -660,7 +738,7 @@ export default function LandingPage() {
             onStepClick={setActiveStep}
             allowNextStepsSelect={false}
             color="rose"
-            size="sm"
+            size={isMobile ? "xs" : "sm"}
           >
             <Stepper.Step label="Contato" description="Dados básicos">
               <Stack gap="md" className="mt-4">
