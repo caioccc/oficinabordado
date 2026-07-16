@@ -612,7 +612,11 @@ export default function LandingPage() {
               className="font-semibold"
               style={{ borderColor: "#A76D5E", color: "#A76D5E" }}
             >
-              Conheça o Ponto Inicial Ateliê no Instagram
+              {
+                isMobile ?
+                "Conheça o Ponto Inicial no Instagram" :
+                "Conheça o Ponto Inicial Ateliê no Instagram"
+              }
             </Button>
           </Stack>
         </Group>
