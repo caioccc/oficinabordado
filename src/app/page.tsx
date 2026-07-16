@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import {
@@ -41,6 +41,7 @@ import {
   IconCoffee,
   IconBook2,
   IconArrowRight,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -68,6 +69,8 @@ export default function LandingPage() {
   const [modalAberto, setModalAberto] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const isMobile = useMediaQuery("(max-width: 48em)");
 
@@ -224,7 +227,7 @@ export default function LandingPage() {
           withBorder
           className="bg-white border-rose-100"
         >
-          <Stack gap="md">
+          <Stack gap="lg">
             <Group justify="space-between" align="center">
               <Group gap="xs">
                 <IconCalendarEvent size={20} className="text-rose-400" />
@@ -243,10 +246,10 @@ export default function LandingPage() {
 
             <hr className="border-stone-100" />
 
-            <Group gap="xs">
+            <Group gap="xs" className="mt-1">
               <IconCalendarEvent size={16} style={{ color: "#A76D5E" }} />
               <Text size="sm" fw={600} className="text-stone-700">
-                DATA E HORA: Sexta, 14 de Agosto de 2026 - às 19h
+                Sexta, 14 de Agosto de 2026 - às 19h
               </Text>
             </Group>
 
@@ -285,7 +288,7 @@ export default function LandingPage() {
               )}
             </div>
 
-            <Group justify="space-between" align="flex-end" className="mt-2">
+            <Group justify="space-between" align="center" className="mt-2">
               <div>
                 <Text
                   size="xs"
@@ -327,10 +330,7 @@ export default function LandingPage() {
             align="center"
             className={isMobile ? "flex-col" : "flex-row"}
           >
-            <Stack
-              gap="md"
-              className={isMobile ? "w-full" : "flex-1"}
-            >
+            <Stack gap="md" className={isMobile ? "w-full" : "flex-1"}>
               <Title
                 order={2}
                 className="text-2xl md:text-3xl font-bold text-stone-800"
@@ -340,15 +340,11 @@ export default function LandingPage() {
               <Text className="text-stone-500 text-base leading-relaxed">
                 Venha passar uma noite agradável onde o tempo corre devagar. Uma
                 pausa na semana para focar no presente, exercitar a paciência e
-                sair com uma peça linda feita por você mesma. Redescubra o prazer
-                de criar com as mãos.
+                sair com uma peça linda feita por você mesma. Redescubra o
+                prazer de criar com as mãos.
               </Text>
             </Stack>
-            <Group
-              gap="md"
-              className={isMobile ? "w-full" : "flex-1"}
-              grow
-            >
+            <Group gap="md" className={isMobile ? "w-full" : "flex-1"} grow>
               <Box
                 component="img"
                 src="/experiencia-1.png"
@@ -381,9 +377,17 @@ export default function LandingPage() {
           </Title>
 
           <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" className="mt-4">
-            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+            <Card
+              padding="xl"
+              radius="lg"
+              withBorder
+              className="bg-white border-stone-100 text-center"
+            >
               <Stack align="center" gap="md">
-                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                <Center
+                  className="w-16 h-16 rounded-full"
+                  style={{ backgroundColor: "#F3E8DF" }}
+                >
                   <IconScissors size={32} style={{ color: "#A76D5E" }} />
                 </Center>
                 <Text fw={700} size="md" className="text-stone-700">
@@ -397,23 +401,40 @@ export default function LandingPage() {
               </Stack>
             </Card>
 
-            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+            <Card
+              padding="xl"
+              radius="lg"
+              withBorder
+              className="bg-white border-stone-100 text-center"
+            >
               <Stack align="center" gap="md">
-                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                <Center
+                  className="w-16 h-16 rounded-full"
+                  style={{ backgroundColor: "#F3E8DF" }}
+                >
                   <IconCoffee size={32} style={{ color: "#A76D5E" }} />
                 </Center>
                 <Text fw={700} size="md" className="text-stone-700">
                   Coffee Break Especial
                 </Text>
                 <Text size="sm" className="text-stone-500 leading-relaxed">
-                  Uma pausa deliciosa preparada com carinho pela La Santa Doçaria.
+                  Uma pausa deliciosa preparada com carinho pela La Santa
+                  Doçaria.
                 </Text>
               </Stack>
             </Card>
 
-            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+            <Card
+              padding="xl"
+              radius="lg"
+              withBorder
+              className="bg-white border-stone-100 text-center"
+            >
               <Stack align="center" gap="md">
-                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                <Center
+                  className="w-16 h-16 rounded-full"
+                  style={{ backgroundColor: "#F3E8DF" }}
+                >
                   <IconBook2 size={32} style={{ color: "#A76D5E" }} />
                 </Center>
                 <Text fw={700} size="md" className="text-stone-700">
@@ -453,16 +474,30 @@ export default function LandingPage() {
                 className={isMobile ? "w-full" : "w-[340px] shrink-0"}
               >
                 <Box
-                  className="w-full overflow-hidden rounded-xl bg-stone-200"
+                  className="relative w-full overflow-hidden rounded-xl bg-stone-200"
                   style={{ aspectRatio: "9/16" }}
                 >
                   <video
+                    ref={videoRef}
                     src="/video-local.mp4"
                     controls
                     muted
                     loop
+                    onPlay={() => setVideoPlaying(true)}
+                    onPause={() => setVideoPlaying(false)}
+                    onEnded={() => setVideoPlaying(false)}
                     className="w-full h-full object-cover"
                   />
+                  {!videoPlaying && (
+                    <Center
+                      className="absolute inset-0 cursor-pointer hover:opacity-80 transition-opacity"
+                      onClick={() => videoRef.current?.play()}
+                    >
+                      <Center className="w-16 h-16 rounded-full bg-white/80 shadow-lg pointer-events-none">
+                        <IconPlayerPlay size={28} className="text-stone-700 ml-1" />
+                      </Center>
+                    </Center>
+                  )}
                 </Box>
                 <Text size="xs" className="text-stone-400 text-center italic">
                   Assista ao vídeo para sentir o clima da atmosfera da La Santa
@@ -475,8 +510,8 @@ export default function LandingPage() {
                 <Text className="text-stone-500 text-base leading-relaxed">
                   Escolhemos a dedo um dos espaços mais charmosos e acolhedores
                   de Campina Grande para que você se sinta em casa. O aroma de
-                  café fresco e a atmosfera tranquila são o cenário perfeito para
-                  a nossa noite de bordado.
+                  café fresco e a atmosfera tranquila são o cenário perfeito
+                  para a nossa noite de bordado.
                 </Text>
 
                 <Group gap="xs">
@@ -489,13 +524,16 @@ export default function LandingPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
+                    <IconBrandInstagram
+                      size={16}
+                      style={{ color: "#98A086" }}
+                    />
                   </Anchor>
                 </Group>
 
                 <Text size="sm" className="text-stone-500">
-                  Av. Mal. Floriano Peixoto, 1520 - Santo Antônio, Campina Grande
-                  - PB, 58406-010
+                  Av. Mal. Floriano Peixoto, 1520 - Santo Antônio, Campina
+                  Grande - PB, 58406-010
                 </Text>
 
                 <iframe
@@ -538,7 +576,11 @@ export default function LandingPage() {
             component="img"
             src="/facilitadora.png"
             alt="Luanna Marinho - Facilitadora"
-            className={isMobile ? "w-full h-auto rounded-lg object-cover" : "w-[380px] h-auto rounded-lg object-cover shrink-0"}
+            className={
+              isMobile
+                ? "w-full h-auto rounded-lg object-cover"
+                : "w-[380px] h-auto rounded-lg object-cover shrink-0"
+            }
             style={!isMobile ? { aspectRatio: "3/4" } : { aspectRatio: "3/4" }}
           />
 
@@ -555,16 +597,18 @@ export default function LandingPage() {
               portal de calma, terapia e expressão pessoal. Mal posso esperar
               para compartilhar os meus pontos favoritos com você.
             </Text>
-            <Anchor
+            <Button
+              component="a"
               href="https://www.instagram.com/pontoinicialatelie/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-semibold text-sm"
-              style={{ color: "#A76D5E" }}
+              variant="outline"
+              rightSection={<IconArrowRight size={16} />}
+              className="font-semibold"
+              style={{ borderColor: "#A76D5E", color: "#A76D5E" }}
             >
               Conheça o Ponto Inicial Ateliê no Instagram
-              <IconArrowRight size={16} />
-            </Anchor>
+            </Button>
           </Stack>
         </Group>
       </Container>
