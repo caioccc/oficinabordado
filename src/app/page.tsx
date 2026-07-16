@@ -22,16 +22,21 @@ import {
   Stepper,
   Radio,
   Textarea,
+  Anchor,
+  Divider,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { IMaskInput } from "react-imask";
 import {
   IconBrandWhatsapp,
+  IconBrandInstagram,
   IconCalendarEvent,
+  IconMapPin,
   IconUsers,
   IconHeart,
 } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface OficinaData {
   titulo: string;
@@ -290,18 +295,60 @@ export default function LandingPage() {
         </Stack>
       </Card>
 
-      <Stack gap="xs" className="px-2 text-stone-600 mb-12">
+      <Stack gap="sm" className="px-2 text-stone-600 mb-12">
         <Group gap="xs">
           <IconHeart size={16} style={{ color: "#98A086" }} />
           <Text size="sm">
-            Todo o material incluso (Bastidor, agulhas e meadas).
+            Incluso: kit de bordado (tecido, bastidor, agulhas, meadas e tesoura
+            de arremate) e coffee break.
           </Text>
         </Group>
+
         <Group gap="xs">
-          <IconHeart size={16} style={{ color: "#98A086" }} />
+          <IconMapPin size={16} style={{ color: "#98A086" }} />
+          <Text size="sm">Local: La Santa Doçaria</Text>
+          <Anchor
+            href="https://www.instagram.com/lasantadocaria/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
+          </Anchor>
+        </Group>
+
+        <Group gap="xs">
+          <IconMapPin size={16} style={{ color: "#98A086" }} />
           <Text size="sm">
-            Apostila impressa com guia de pontos principais.
+            Av. Mal. Floriano Peixoto, 1520 - Santo Antônio, Campina Grande -
+            PB, 58406-010
           </Text>
+        </Group>
+
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d440.79674062871743!2d-35.876013984165596!3d-7.215618271187231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ac1f6b5ab9cf5f%3A0xa8e075e0d9143b55!2sLa%20Santa%20Do%C3%A7aria!5e0!3m2!1spt-BR!2sbr!4v1784233847631!5m2!1spt-BR!2sbr"
+          width="100%"
+          height="250"
+          style={{ border: 0, borderRadius: "0.5rem" }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+
+        <Divider />
+
+        <Group gap="xs">
+          <Text size="sm">Realização:</Text>
+          <Link
+            href="https://www.instagram.com/pontoinicialatelie/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1"
+          >
+            <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
+            <Text size="sm" className="text-stone-600 underline">
+              Ponto Inicial Ateliê
+            </Text>
+          </Link>
         </Group>
       </Stack>
 

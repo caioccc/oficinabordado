@@ -9,6 +9,14 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Oficina de Bordado Livre",
   description: "Ganta sua vaga na nossa oficina exclusiva.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/apple-touch-icon-120x120.png", type: "image/png", sizes: "120x120" },
+    ],
+    apple: "/apple-touch-icon.png",
+    other: [{ rel: "manifest", url: "/site.webmanifest" }],
+  },
 };
 
 // Definição da nossa paleta de cores Rose e Champagne para o Mantine
@@ -52,7 +60,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        {/* Usamos a propriedade strategy ou deixamos o Mantine gerenciar sem o aviso do Turbopack */}
         <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body className={inter.className}>
