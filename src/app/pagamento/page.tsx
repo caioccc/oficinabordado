@@ -75,10 +75,8 @@ export default function PagamentoPage() {
           className="cursor-pointer select-none transition-all duration-200 ease-in-out hover:border-rose-400 hover:shadow-md hover:scale-[1.02]"
           style={{
             borderWidth: 2,
-            borderColor:
-              metodo === "pix" ? "#ec4899" : "rgb(229 231 235)",
-            backgroundColor:
-              metodo === "pix" ? "#fdf2f8" : "white",
+            borderColor: metodo === "pix" ? "#ec4899" : "rgb(229 231 235)",
+            backgroundColor: metodo === "pix" ? "#fdf2f8" : "white",
           }}
           onClick={() => setMetodo("pix")}
         >
@@ -86,8 +84,7 @@ export default function PagamentoPage() {
             <Center
               className="w-14 h-14 rounded-xl transition-colors duration-200"
               style={{
-                backgroundColor:
-                  metodo === "pix" ? "#fce7f3" : "#f5f5f4",
+                backgroundColor: metodo === "pix" ? "#fce7f3" : "#f5f5f4",
               }}
             >
               <IconQrcode
@@ -124,10 +121,8 @@ export default function PagamentoPage() {
           className="cursor-pointer select-none transition-all duration-200 ease-in-out hover:border-rose-400 hover:shadow-md hover:scale-[1.02]"
           style={{
             borderWidth: 2,
-            borderColor:
-              metodo === "cartao" ? "#ec4899" : "rgb(229 231 235)",
-            backgroundColor:
-              metodo === "cartao" ? "#fdf2f8" : "white",
+            borderColor: metodo === "cartao" ? "#ec4899" : "rgb(229 231 235)",
+            backgroundColor: metodo === "cartao" ? "#fdf2f8" : "white",
           }}
           onClick={() => setMetodo("cartao")}
         >
@@ -135,8 +130,7 @@ export default function PagamentoPage() {
             <Center
               className="w-14 h-14 rounded-xl transition-colors duration-200"
               style={{
-                backgroundColor:
-                  metodo === "cartao" ? "#fce7f3" : "#f5f5f4",
+                backgroundColor: metodo === "cartao" ? "#fce7f3" : "#f5f5f4",
               }}
             >
               <IconCreditCard
@@ -160,6 +154,9 @@ export default function PagamentoPage() {
               </Text>
               <Text size="sm" className="text-stone-500">
                 Pagamento seguro via Mercado Pago.
+              </Text>
+              <Text size="sm" className="text-stone-500">
+                Valor com acréscimo de taxa de operação financeira.
               </Text>
             </div>
           </Group>
@@ -196,7 +193,8 @@ export default function PagamentoPage() {
       >
         <Group justify="space-between" align="center">
           <Text size="sm" className="text-stone-500">
-            Inscrição de <span className="font-semibold text-stone-700">{dados.nome}</span>
+            Inscrição de{" "}
+            <span className="font-semibold text-stone-700">{dados.nome}</span>
           </Text>
           <Text fw={700} size="lg" className="text-stone-800">
             R${" "}

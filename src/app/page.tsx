@@ -561,7 +561,7 @@ export default function LandingPage() {
 
       {/* BOTÃO FLUTUANTE WHATSAPP */}
       <Affix position={{ bottom: 20, right: 20 }}>
-        <Transition transition="slide-up" mounted={true}>
+        <Transition transition="slide-up" mounted={!modalAberto}>
           {(transitionStyles) => (
             <Button
               style={transitionStyles}
