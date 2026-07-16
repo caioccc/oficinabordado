@@ -24,6 +24,8 @@ import {
   Textarea,
   Anchor,
   Divider,
+  SimpleGrid,
+  Box,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -35,6 +37,10 @@ import {
   IconMapPin,
   IconUsers,
   IconHeart,
+  IconScissors,
+  IconCoffee,
+  IconBook2,
+  IconArrowRight,
 } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -65,7 +71,6 @@ export default function LandingPage() {
 
   const isMobile = useMediaQuery("(max-width: 48em)");
 
-  // Configuração do React Hook Form
   const {
     register,
     handleSubmit,
@@ -83,7 +88,6 @@ export default function LandingPage() {
     },
   });
 
-  // Polling de Vagas
   useEffect(() => {
     let ativo = true;
 
@@ -98,10 +102,7 @@ export default function LandingPage() {
       }
     };
 
-    // Executa a primeira busca de forma assíncrona fora do fluxo síncrono principal
     executarBusca();
-
-    // Define o intervalo para os próximos pollings
     const interval = setInterval(executarBusca, 10000);
 
     return () => {
@@ -110,7 +111,6 @@ export default function LandingPage() {
     };
   }, []);
 
-  // Avança no Stepper validando apenas os campos da etapa atual antes de mudar de aba
   const proximoPasso = async () => {
     let camposValidos = false;
 
@@ -135,7 +135,6 @@ export default function LandingPage() {
   const passoAnterior = () =>
     setActiveStep((current) => (current > 0 ? current - 1 : current));
 
-  // Envio final do questionário unificado
   const onSubmitInscricao = async (data: InscricaoForm) => {
     setEnviando(true);
     try {
@@ -186,173 +185,417 @@ export default function LandingPage() {
   const esgotado = oficina.vagas_restantes <= 0;
 
   return (
-    <Container size="sm" className="py-12 px-4 pb-24 md:py-20">
-      <Stack align="center" className="mb-12 text-center">
-        <Badge
-          style={{ backgroundColor: "#EAE3D8", color: "#846044" }}
-          variant="light"
-          size="lg"
-          radius="sm"
-          className="font-semibold px-4 py-1"
+    <>
+      {/* ============================================
+          SEÇÃO 1 — HERO
+          ============================================ */}
+      <Container size="sm" className="pt-16 pb-8 px-4 md:pt-24 md:pb-12">
+        <Stack align="center" className="text-center">
+          <Badge
+            style={{ backgroundColor: "#EAE3D8", color: "#846044" }}
+            variant="light"
+            size="lg"
+            radius="sm"
+            className="font-semibold px-4 py-1"
+          >
+            VAGAS EXCLUSIVAS & LIMITADAS
+          </Badge>
+          <Title
+            order={1}
+            className="text-3xl md:text-4xl font-extrabold tracking-tight text-stone-800 mt-2"
+          >
+            {oficina.titulo}
+          </Title>
+          <Text className="text-stone-500 max-w-md text-base leading-relaxed mt-1">
+            Descubra a calmaria e a delicadeza do bordado livre feito à mão. Uma
+            experiência única para desacelerar e criar arte.
+          </Text>
+        </Stack>
+      </Container>
+
+      {/* ============================================
+          SEÇÃO 2 — CTA CARD (Bloco Branco Flutuante)
+          ============================================ */}
+      <Container size="sm" className="px-4 pb-16 md:pb-24">
+        <Card
+          shadow="xl"
+          padding="xl"
+          radius="xl"
+          withBorder
+          className="bg-white border-rose-100"
         >
-          VAGAS EXCLUSIVAS & LIMITADAS
-        </Badge>
-        <Title
-          order={1}
-          className="text-3xl md:text-4xl font-extrabold tracking-tight text-stone-800 mt-2"
-        >
-          {oficina.titulo}
-        </Title>
-        <Text className="text-stone-500 max-w-md text-base leading-relaxed mt-1">
-          Descubra a calmaria e a delicadeza do bordado livre feito à mão. Uma
-          experiência única para desacelerar e criar arte.
-        </Text>
-      </Stack>
-
-      <Card
-        shadow="md"
-        padding="xl"
-        radius="lg"
-        withBorder
-        className="bg-white border-rose-100 mb-8"
-      >
-        <Stack gap="md">
-          <Group justify="space-between" align="center">
-            <Group gap="xs">
-              <IconCalendarEvent size={20} className="text-rose-400" />
-              <Text size="sm" className="font-medium text-stone-600">
-                Próxima Turma Presencial
-              </Text>
-            </Group>
-            <Badge
-              color={esgotado ? "red" : "rose"}
-              variant="filled"
-              radius="sm"
-            >
-              {esgotado ? "ESGOTADO" : "INSCRIÇÕES ABERTAS"}
-            </Badge>
-          </Group>
-
-          <hr className="border-stone-100" />
-
-          <div>
-            <Group justify="space-between" className="mb-2">
-              <Group gap={6}>
-                <IconUsers size={16} className="text-stone-400" />
-                <Text
-                  size="xs"
-                  className="font-semibold text-stone-500 uppercase tracking-wider"
-                >
-                  Ocupação da oficina
+          <Stack gap="md">
+            <Group justify="space-between" align="center">
+              <Group gap="xs">
+                <IconCalendarEvent size={20} className="text-rose-400" />
+                <Text size="sm" className="font-medium text-stone-600">
+                  Próxima Turma Presencial
                 </Text>
               </Group>
-              <Text
-                size="xs"
-                className={`font-bold ${esgotado ? "text-red-500" : "text-rose-600 animate-pulse"}`}
+              <Badge
+                color={esgotado ? "red" : "rose"}
+                variant="filled"
+                radius="sm"
               >
-                {esgotado
-                  ? "Nenhuma vaga restante"
-                  : `Restam apenas ${oficina.vagas_restantes} vagas!`}
+                {esgotado ? "ESGOTADO" : "INSCRIÇÕES ABERTAS"}
+              </Badge>
+            </Group>
+
+            <hr className="border-stone-100" />
+
+            <Group gap="xs">
+              <IconCalendarEvent size={16} style={{ color: "#A76D5E" }} />
+              <Text size="sm" fw={600} className="text-stone-700">
+                DATA E HORA: Sexta, 14 de Agosto de 2026 - às 19h
               </Text>
             </Group>
-            <Progress
-              value={percentualPreenchido}
-              color={esgotado ? "red" : "rose.4"}
-              size="md"
-              radius="xl"
-              className="bg-stone-100"
-            />
-          </div>
 
-          <Group justify="space-between" align="flex-end" className="mt-4">
             <div>
-              <Text
-                size="xs"
-                className="text-stone-400 uppercase tracking-wider font-semibold"
-              >
-                Valor da Inscrição
-              </Text>
-              <Text className="text-3xl font-black text-stone-800">
-                R${" "}
-                {Number(oficina.preco).toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
-              </Text>
+              <Group justify="space-between" className="mb-2">
+                <Group gap={6}>
+                  <IconUsers size={16} className="text-stone-400" />
+                  <Text
+                    size="xs"
+                    className="font-semibold text-stone-500 uppercase tracking-wider"
+                  >
+                    Ocupação da oficina
+                  </Text>
+                </Group>
+                <Text
+                  size="xs"
+                  className={`font-bold ${esgotado ? "text-red-500" : "text-rose-600 animate-pulse"}`}
+                >
+                  {esgotado
+                    ? "Nenhuma vaga restante"
+                    : `Restam apenas ${oficina.vagas_restantes} vagas!`}
+                </Text>
+              </Group>
+              <Progress
+                value={percentualPreenchido}
+                color={esgotado ? "red" : "rose.4"}
+                size="md"
+                radius="xl"
+                className="bg-stone-100"
+              />
+              {!esgotado && (
+                <Text size="xs" className="text-stone-400 mt-2">
+                  Turma reduzida para garantir atenção exclusiva a cada
+                  participante.
+                </Text>
+              )}
             </div>
-            <Button
-              size="lg"
-              disabled={esgotado}
-              onClick={() => {
-                setActiveStep(0);
-                setModalAberto(true);
-              }}
-              style={{ backgroundColor: "#A76D5E" }}
-              className="hover:opacity-90 font-semibold px-8 shadow-sm text-white"
+
+            <Group justify="space-between" align="flex-end" className="mt-2">
+              <div>
+                <Text
+                  size="xs"
+                  className="text-stone-400 uppercase tracking-wider font-semibold"
+                >
+                  Valor da Inscrição
+                </Text>
+                <Text className="text-3xl font-black text-stone-800">
+                  R${" "}
+                  {Number(oficina.preco).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </Text>
+              </div>
+              <Button
+                size="lg"
+                disabled={esgotado}
+                onClick={() => {
+                  setActiveStep(0);
+                  setModalAberto(true);
+                }}
+                style={{ backgroundColor: "#A76D5E" }}
+                className="hover:opacity-90 font-semibold px-8 shadow-sm text-white"
+              >
+                {esgotado ? "Vagas Esgotadas" : "Garantir Minha Vaga"}
+              </Button>
+            </Group>
+          </Stack>
+        </Card>
+      </Container>
+
+      {/* ============================================
+          SEÇÃO 3 — A EXPERIÊNCIA
+          ============================================ */}
+      <Box className="bg-white/50">
+        <Container size="md" className="py-16 md:py-24 px-4">
+          <Group
+            gap="xl"
+            align="center"
+            className={isMobile ? "flex-col" : "flex-row"}
+          >
+            <Stack
+              gap="md"
+              className={isMobile ? "w-full" : "flex-1"}
             >
-              {esgotado ? "Vagas Esgotadas" : "Garantir Minha Vaga"}
-            </Button>
+              <Title
+                order={2}
+                className="text-2xl md:text-3xl font-bold text-stone-800"
+              >
+                A Experiência
+              </Title>
+              <Text className="text-stone-500 text-base leading-relaxed">
+                Venha passar uma noite agradável onde o tempo corre devagar. Uma
+                pausa na semana para focar no presente, exercitar a paciência e
+                sair com uma peça linda feita por você mesma. Redescubra o prazer
+                de criar com as mãos.
+              </Text>
+            </Stack>
+            <Group
+              gap="md"
+              className={isMobile ? "w-full" : "flex-1"}
+              grow
+            >
+              <Box
+                component="img"
+                src="/experiencia-1.png"
+                alt="Experiência de bordado - parte 1"
+                className="w-full h-auto rounded-lg object-cover"
+                style={{ aspectRatio: "1/2" }}
+              />
+              <Box
+                component="img"
+                src="/experiencia-2.png"
+                alt="Experiência de bordado - parte 2"
+                className="w-full h-auto rounded-lg object-cover"
+                style={{ aspectRatio: "1/2" }}
+              />
+            </Group>
           </Group>
+        </Container>
+      </Box>
+
+      {/* ============================================
+          SEÇÃO 4 — O QUE ESTÁ INCLUSO
+          ============================================ */}
+      <Container size="md" className="py-16 md:py-24 px-4">
+        <Stack gap="lg">
+          <Title
+            order={2}
+            className="text-2xl md:text-3xl font-bold text-stone-800 text-center"
+          >
+            Tudo o que está incluso no seu ingresso:
+          </Title>
+
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" className="mt-4">
+            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+              <Stack align="center" gap="md">
+                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                  <IconScissors size={32} style={{ color: "#A76D5E" }} />
+                </Center>
+                <Text fw={700} size="md" className="text-stone-700">
+                  Kit Completo de Bordado
+                </Text>
+                <Text size="xs" className="text-stone-500 leading-relaxed">
+                  Bastidor de madeira, tecido de algodão cru riscado, meadas de
+                  linhas em cores selecionadas, agulhas e tesoura de arremate.
+                  Tudo para levar para casa.
+                </Text>
+              </Stack>
+            </Card>
+
+            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+              <Stack align="center" gap="md">
+                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                  <IconCoffee size={32} style={{ color: "#A76D5E" }} />
+                </Center>
+                <Text fw={700} size="md" className="text-stone-700">
+                  Coffee Break Especial
+                </Text>
+                <Text size="sm" className="text-stone-500 leading-relaxed">
+                  Uma pausa deliciosa preparada com carinho pela La Santa Doçaria.
+                </Text>
+              </Stack>
+            </Card>
+
+            <Card padding="xl" radius="lg" withBorder className="bg-white border-stone-100 text-center">
+              <Stack align="center" gap="md">
+                <Center className="w-16 h-16 rounded-full" style={{ backgroundColor: "#F3E8DF" }}>
+                  <IconBook2 size={32} style={{ color: "#A76D5E" }} />
+                </Center>
+                <Text fw={700} size="md" className="text-stone-700">
+                  Guia de Pontos
+                </Text>
+                <Text size="sm" className="text-stone-500 leading-relaxed">
+                  Um mini-guia ilustrado dos pontos ensinados para continuar
+                  praticando em casa. Brinde exclusivo!
+                </Text>
+              </Stack>
+            </Card>
+          </SimpleGrid>
         </Stack>
-      </Card>
+      </Container>
 
-      <Stack gap="sm" className="px-2 text-stone-600 mb-12">
-        <Group gap="xs">
-          <IconHeart size={16} style={{ color: "#98A086" }} />
-          <Text size="sm">
-            Incluso: kit de bordado (tecido, bastidor, agulhas, meadas e tesoura
-            de arremate) e coffee break.
-          </Text>
-        </Group>
+      {/* ============================================
+          SEÇÃO 5 — O LOCAL
+          ============================================ */}
+      <Box className="bg-white/50">
+        <Container size="md" className="py-16 md:py-24 px-4">
+          <Stack gap="xl">
+            <Title
+              order={2}
+              className="text-2xl md:text-3xl font-bold text-stone-800"
+            >
+              O Local: La Santa Doçaria
+            </Title>
 
-        <Group gap="xs">
-          <IconMapPin size={16} style={{ color: "#98A086" }} />
-          <Text size="sm">Local: La Santa Doçaria</Text>
-          <Anchor
-            href="https://www.instagram.com/lasantadocaria/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
-          </Anchor>
-        </Group>
+            <Group
+              gap="xl"
+              align="start"
+              className={isMobile ? "flex-col" : "flex-row"}
+            >
+              {/* Coluna do Vídeo — 9:16 */}
+              <Stack
+                gap="sm"
+                className={isMobile ? "w-full" : "w-[340px] shrink-0"}
+              >
+                <Box
+                  className="w-full overflow-hidden rounded-xl bg-stone-200"
+                  style={{ aspectRatio: "9/16" }}
+                >
+                  <video
+                    src="/video-local.mp4"
+                    controls
+                    muted
+                    loop
+                    className="w-full h-full object-cover"
+                  />
+                </Box>
+                <Text size="xs" className="text-stone-400 text-center italic">
+                  Assista ao vídeo para sentir o clima da atmosfera da La Santa
+                  Doçaria.
+                </Text>
+              </Stack>
 
-        <Group gap="xs">
-          <IconMapPin size={16} style={{ color: "#98A086" }} />
-          <Text size="sm">
-            Av. Mal. Floriano Peixoto, 1520 - Santo Antônio, Campina Grande -
-            PB, 58406-010
-          </Text>
-        </Group>
+              {/* Coluna de Texto */}
+              <Stack gap="md" className={isMobile ? "w-full" : "flex-1"}>
+                <Text className="text-stone-500 text-base leading-relaxed">
+                  Escolhemos a dedo um dos espaços mais charmosos e acolhedores
+                  de Campina Grande para que você se sinta em casa. O aroma de
+                  café fresco e a atmosfera tranquila são o cenário perfeito para
+                  a nossa noite de bordado.
+                </Text>
 
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d440.79674062871743!2d-35.876013984165596!3d-7.215618271187231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ac1f6b5ab9cf5f%3A0xa8e075e0d9143b55!2sLa%20Santa%20Do%C3%A7aria!5e0!3m2!1spt-BR!2sbr!4v1784233847631!5m2!1spt-BR!2sbr"
-          width="100%"
-          height="250"
-          style={{ border: 0, borderRadius: "0.5rem" }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
+                <Group gap="xs">
+                  <IconMapPin size={16} style={{ color: "#A76D5E" }} />
+                  <Text size="sm" fw={600} className="text-stone-700">
+                    La Santa Doçaria
+                  </Text>
+                  <Anchor
+                    href="https://www.instagram.com/lasantadocaria/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
+                  </Anchor>
+                </Group>
 
-        <Divider />
+                <Text size="sm" className="text-stone-500">
+                  Av. Mal. Floriano Peixoto, 1520 - Santo Antônio, Campina Grande
+                  - PB, 58406-010
+                </Text>
 
-        <Group gap="xs">
-          <Text size="sm">Realização:</Text>
-          <Link
-            href="https://www.instagram.com/pontoinicialatelie/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1"
-          >
-            <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
-            <Text size="sm" className="text-stone-600 underline">
-              Ponto Inicial Ateliê
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d440.79674062871743!2d-35.876013984165596!3d-7.215618271187231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ac1f6b5ab9cf5f%3A0xa8e075e0d9143b55!2sLa%20Santa%20Do%C3%A7aria!5e0!3m2!1spt-BR!2sbr!4v1784233847631!5m2!1spt-BR!2sbr"
+                  width="100%"
+                  height="250"
+                  style={{ border: 0, borderRadius: "0.75rem" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+
+                <Button
+                  component="a"
+                  href="https://www.google.com/maps/place/La+Santa+Do%C3%A7aria/@-7.2156183,-35.876014,17z/data=!3m1!4b1!4m6!3m5!1s0x7ac1f6b5ab9cf5f:0xa8e075e0d9143b55!8m2!3d-7.2156183!4d-35.8734393!16s%2Fg%2F11c5vm1t3s"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  rightSection={<IconArrowRight size={16} />}
+                  className="hover:opacity-90 font-semibold text-white"
+                  style={{ backgroundColor: "#A76D5E" }}
+                >
+                  Como chegar (Abrir no Google Maps)
+                </Button>
+              </Stack>
+            </Group>
+          </Stack>
+        </Container>
+      </Box>
+
+      {/* ============================================
+          SEÇÃO 6 — QUEM VAI TE GUIAR
+          ============================================ */}
+      <Container size="md" className="py-16 md:py-24 px-4">
+        <Group
+          gap="xl"
+          align="center"
+          className={isMobile ? "flex-col" : "flex-row"}
+        >
+          <Box
+            component="img"
+            src="/facilitadora.png"
+            alt="Luanna Marinho - Facilitadora"
+            className={isMobile ? "w-full h-auto rounded-lg object-cover" : "w-[380px] h-auto rounded-lg object-cover shrink-0"}
+            style={!isMobile ? { aspectRatio: "3/4" } : { aspectRatio: "3/4" }}
+          />
+
+          <Stack gap="md" className={isMobile ? "w-full" : "flex-1"}>
+            <Title
+              order={2}
+              className="text-2xl md:text-3xl font-bold text-stone-800"
+            >
+              Quem vai te guiar
+            </Title>
+            <Text className="text-stone-500 text-base leading-relaxed">
+              Olá! Eu sou a Luanna Marinho, criadora do Ponto Inicial Ateliê.
+              Para mim, o bordado livre é muito mais do que fios e agulhas: é um
+              portal de calma, terapia e expressão pessoal. Mal posso esperar
+              para compartilhar os meus pontos favoritos com você.
             </Text>
-          </Link>
+            <Anchor
+              href="https://www.instagram.com/pontoinicialatelie/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-semibold text-sm"
+              style={{ color: "#A76D5E" }}
+            >
+              Conheça o Ponto Inicial Ateliê no Instagram
+              <IconArrowRight size={16} />
+            </Anchor>
+          </Stack>
         </Group>
-      </Stack>
+      </Container>
 
-      {/* MODAL RESPONSIVO COM O STEPPER DO FORMULÁRIO */}
+      {/* ============================================
+          SEÇÃO 7 — FOOTER
+          ============================================ */}
+      <Box className="border-t border-stone-200 bg-white/50">
+        <Container size="md" className="py-10 px-4">
+          <Group justify="center" gap="xs">
+            <Text size="sm" className="text-stone-500">
+              Realização:
+            </Text>
+            <Link
+              href="https://www.instagram.com/pontoinicialatelie/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1"
+            >
+              <IconBrandInstagram size={16} style={{ color: "#98A086" }} />
+              <Text size="sm" fw={600} className="text-stone-600 underline">
+                Ponto Inicial Ateliê
+              </Text>
+            </Link>
+          </Group>
+        </Container>
+      </Box>
+
+      {/* ============================================
+          MODAL RESPONSIVO COM O STEPPER DO FORMULÁRIO
+          ============================================ */}
       <Modal
         opened={modalAberto}
         onClose={() => !enviando && setModalAberto(false)}
@@ -375,7 +618,6 @@ export default function LandingPage() {
             color="rose"
             size="sm"
           >
-            {/* PASSO 1: DADOS PESSOAIS */}
             <Stepper.Step label="Contato" description="Dados básicos">
               <Stack gap="md" className="mt-4">
                 <TextInput
@@ -433,7 +675,6 @@ export default function LandingPage() {
               </Stack>
             </Stepper.Step>
 
-            {/* PASSO 2: INTERESSES E DIAS */}
             <Stepper.Step label="Oficina" description="Preferências">
               <Stack gap="lg" className="mt-4">
                 <Controller
@@ -535,7 +776,6 @@ export default function LandingPage() {
               </Stack>
             </Stepper.Step>
 
-            {/* PASSO 3: EXPECTATIVAS E USO DE IMAGEM */}
             <Stepper.Step label="Expectativas" description="Finalização">
               <Stack gap="lg" className="mt-4">
                 <Controller
@@ -566,7 +806,6 @@ export default function LandingPage() {
             </Stepper.Step>
           </Stepper>
 
-          {/* CONTROLADORES DE NAVEGAÇÃO DO STEPPER DENTRO DO MODAL */}
           <Group
             justify="flex-end"
             className="mt-8 border-t border-stone-100 pt-4"
@@ -592,11 +831,10 @@ export default function LandingPage() {
               </Button>
             ) : (
               <Button
-                type="button" /* Alterado para button para evitar comportamento nativo */
+                type="button"
                 color="rose"
                 loading={enviando}
                 className="bg-rose-600 hover:bg-rose-700 px-6"
-                /* 👇 CHAMA O HANDLESUBMIT DIRETAMENTE AQUI */
                 onClick={handleSubmit(onSubmitInscricao)}
               >
                 Concluir e Ir para Pagamento
@@ -606,7 +844,9 @@ export default function LandingPage() {
         </form>
       </Modal>
 
-      {/* BOTÃO FLUTUANTE WHATSAPP */}
+      {/* ============================================
+          BOTÃO FLUTUANTE WHATSAPP
+          ============================================ */}
       <Affix position={{ bottom: 20, right: 20 }}>
         <Transition transition="slide-up" mounted={!modalAberto}>
           {(transitionStyles) => (
@@ -621,11 +861,11 @@ export default function LandingPage() {
               href={`https://wa.me/${process.env.NEXT_PUBLIC_CONTATO_WHATSAPP}?text=Olá!%20Estou%20com%20dúvidas%20sobre%20a%20oficina%20de%20bordado.`}
               target="_blank"
             >
-              Fale Comigo
+              Tem dúvida? Fale comigo
             </Button>
           )}
         </Transition>
       </Affix>
-    </Container>
+    </>
   );
 }
