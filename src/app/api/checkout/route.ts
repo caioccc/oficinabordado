@@ -28,6 +28,21 @@ export async function POST(request: Request) {
     const checkoutUrl = process.env.NEXT_PUBLIC_MP_CHECKOUT_URL;
     const adminSupabase = getSupabaseAdmin();
 
+    // Verificar se já existe inscrição para este email nesta oficina
+    const { data: inscricaoExistente } = await adminSupabase
+      .from("inscricoes")
+      .select("nome")
+      .eq("email", email)
+      .eq("oficina_id", oficinaId)
+      .maybeSingle();
+
+    if (inscricaoExistente) {
+      return NextResponse.json({
+        alreadyRegistered: true,
+        nome: inscricaoExistente.nome,
+      });
+    }
+
     // Atualize a chamada da RPC passando os novos campos mapeados
     const { data: inscricaoId, error } = await adminSupabase.rpc(
       "realizar_inscricao",
@@ -37,7 +52,6 @@ export async function POST(request: Request) {
         p_email: email,
         p_telefone: telefone,
         p_mp_preference_id: null,
-        // 👇 Novos campos adicionados ao payload da RPC:
         p_tipo_participacao: tipo_participacao,
         p_experiencia_bordado: experiencia_bordado,
         p_o_que_bordar: o_que_bordar,
@@ -48,7 +62,27 @@ export async function POST(request: Request) {
     );
 
     if (error) {
+      const msg = error.message?.toLowerCase() || "";
+      if (
+        msg.includes("já possui") ||
+        msg.includes("já existe") ||
+        msg.includes("unique") ||
+        msg.includes("duplicate")
+      ) {
+        return NextResponse.json({
+          alreadyRegistered: true,
+          nome: nome,
+        });
+      }
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    // Registrar aceite da política de cancelamento
+    if (inscricaoId) {
+      await adminSupabase
+        .from("inscricoes")
+        .update({ aceitou_politica: true })
+        .eq("id", inscricaoId);
     }
 
     return NextResponse.json({ redirectUrl: checkoutUrl });

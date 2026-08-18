@@ -26,6 +26,8 @@ import {
   Divider,
   SimpleGrid,
   Box,
+  Checkbox,
+  Accordion,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -44,6 +46,7 @@ import {
   IconPlayerPlay,
   IconClock,
   IconGift,
+  IconReceipt,
 } from "@tabler/icons-react";
 import Link from "next/link";
 
@@ -64,6 +67,7 @@ interface InscricaoForm {
   melhor_dia: string;
   permite_uso_imagem: string;
   expectativas: string;
+  aceitou_politica: boolean;
 }
 
 export default function LandingPage() {
@@ -90,6 +94,7 @@ export default function LandingPage() {
       melhor_dia: "Final de semana",
       permite_uso_imagem: "Sim",
       expectativas: "",
+      aceitou_politica: false,
     },
   });
 
@@ -129,7 +134,11 @@ export default function LandingPage() {
         "melhor_dia",
       ]);
     } else if (activeStep === 2) {
-      camposValidos = await trigger(["permite_uso_imagem", "expectativas"]);
+      camposValidos = await trigger([
+        "permite_uso_imagem",
+        "expectativas",
+        "aceitou_politica",
+      ]);
     }
 
     if (camposValidos) {
@@ -144,6 +153,26 @@ export default function LandingPage() {
     setEnviando(true);
     try {
       const response = await axios.post("/api/checkout", data);
+
+      if (response.data.alreadyRegistered) {
+        localStorage.setItem(
+          "inscricao_dados",
+          JSON.stringify({
+            nome: response.data.nome,
+            preco: oficina?.preco,
+            redirectUrl: process.env.NEXT_PUBLIC_MP_CHECKOUT_URL,
+          }),
+        );
+        notifications.show({
+          title: "Você já está inscrito!",
+          message: "Redirecionando para pagamento...",
+          color: "yellow",
+          loading: true,
+          autoClose: 2000,
+        });
+        window.location.href = "/pagamento";
+        return;
+      }
 
       if (response.data.redirectUrl) {
         localStorage.setItem(
@@ -251,7 +280,7 @@ export default function LandingPage() {
             <Group gap="xs" className="mt-1">
               <IconCalendarEvent size={16} style={{ color: "#A76D5E" }} />
               <Text size="sm" fw={600} className="text-stone-700">
-                Sexta, 14 de Agosto de 2026 - às 19h
+                {process.env.NEXT_PUBLIC_DATA_HORA}
               </Text>
             </Group>
 
@@ -349,14 +378,14 @@ export default function LandingPage() {
             <Group gap="md" className={isMobile ? "w-full" : "flex-1"} grow>
               <Box
                 component="img"
-                src="/experiencia-1.png"
+                src="/experiencia-1.jpeg"
                 alt="Experiência de bordado - parte 1"
                 className="w-full h-auto rounded-lg object-cover"
                 style={{ aspectRatio: "1/2" }}
               />
               <Box
                 component="img"
-                src="/experiencia-2.png"
+                src="/experiencia-2.jpeg"
                 alt="Experiência de bordado - parte 2"
                 className="w-full h-auto rounded-lg object-cover"
                 style={{ aspectRatio: "1/2" }}
@@ -579,7 +608,7 @@ export default function LandingPage() {
         >
           <Box
             component="img"
-            src="/facilitadora.png"
+            src="/facilitadora.jpeg"
             alt="Luanna Marinho - Facilitadora"
             className={
               isMobile
@@ -696,7 +725,89 @@ export default function LandingPage() {
       </Box>
 
       {/* ============================================
-          SEÇÃO 8 — FOOTER
+          SEÇÃO 8 — POLÍTICA DE CANCELAMENTO
+          ============================================ */}
+      <Box className="bg-stone-50">
+        <Container size="md" className="py-16 md:py-20 px-4">
+          <Stack align="center" gap="lg" className="text-center mb-10">
+            <Group gap="xs">
+              <IconReceipt size={28} style={{ color: "#A76D5E" }} />
+              <Title
+                order={2}
+                className="text-2xl md:text-3xl font-bold text-stone-800"
+              >
+                Política de Cancelamento e Remarcação
+              </Title>
+            </Group>
+          </Stack>
+
+          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+            <Card padding="lg" radius="md" withBorder className="bg-white">
+              <Stack gap="sm">
+                <Group gap="xs">
+                  <IconCalendarEvent size={20} style={{ color: "#A76D5E" }} />
+                  <Text fw={700} size="sm" className="text-stone-700">
+                    Prazo Legal de Arrependimento
+                  </Text>
+                </Group>
+                <Text size="xs" className="text-stone-400 uppercase tracking-wider font-semibold">
+                  Até 7 dias após a compra
+                </Text>
+                <Text size="sm" className="text-stone-500 leading-relaxed">
+                  Reembolso integral (R${" "}
+                  {Number(oficina.preco).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}) para desistências informadas
+                  em até 7 dias corridos a contar da data do pagamento, desde
+                  que a solicitação ocorra antes do início da oficina.
+                </Text>
+              </Stack>
+            </Card>
+
+            <Card padding="lg" radius="md" withBorder className="bg-white">
+              <Stack gap="sm">
+                <Group gap="xs">
+                  <IconClock size={20} style={{ color: "#A76D5E" }} />
+                  <Text fw={700} size="sm" className="text-stone-700">
+                    Após o prazo de 7 dias
+                  </Text>
+                </Group>
+                <Text size="xs" className="text-stone-400 uppercase tracking-wider font-semibold">
+                  Qualquer antecedência
+                </Text>
+                <Text size="sm" className="text-stone-500 leading-relaxed">
+                  Não haverá reembolso do valor em dinheiro. A inscrição será
+                  transferida para a próxima data disponível mediante o
+                  pagamento de uma taxa de remarcação de 50% do valor da
+                  oficina.
+                </Text>
+              </Stack>
+            </Card>
+
+            <Card padding="lg" radius="md" withBorder className="bg-white">
+              <Stack gap="sm">
+                <Group gap="xs">
+                  <IconGift size={20} style={{ color: "#A76D5E" }} />
+                  <Text fw={700} size="sm" className="text-stone-700">
+                    Menos de 48h ou Não Comparecimento
+                  </Text>
+                </Group>
+                <Text size="xs" className="text-stone-400 uppercase tracking-wider font-semibold">
+                  Última hora
+                </Text>
+                <Text size="sm" className="text-stone-500 leading-relaxed">
+                  Segue a mesma regra acima. Sem reembolso em dinheiro;
+                  transferência apenas mediante o pagamento da taxa de
+                  remarcação de 50%.
+                </Text>
+              </Stack>
+            </Card>
+          </SimpleGrid>
+        </Container>
+      </Box>
+
+      {/* ============================================
+          SEÇÃO 9 — FOOTER
           ============================================ */}
       <Box className="border-t border-stone-200 bg-white/50">
         <Container size="md" className="py-10 px-4">
@@ -845,7 +956,7 @@ export default function LandingPage() {
                   )}
                 />
 
-                <Controller
+                {/* <Controller
                   name="o_que_bordar"
                   control={control}
                   render={({ field }) => (
@@ -898,7 +1009,7 @@ export default function LandingPage() {
                       </Stack>
                     </Radio.Group>
                   )}
-                />
+                /> */}
               </Stack>
             </Stepper.Step>
 
@@ -928,6 +1039,77 @@ export default function LandingPage() {
                   size="md"
                   {...register("expectativas")}
                 />
+
+                <Controller
+                  name="aceitou_politica"
+                  control={control}
+                  rules={{
+                    required: "Você precisa aceitar a política de cancelamento",
+                  }}
+                  render={({ field }) => (
+                    <Stack gap="xs">
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.currentTarget.checked)}
+                        label="Li e aceito a Política de Cancelamento e Remarcação"
+                        color="rose"
+                        size="md"
+                      />
+                      {errors.aceitou_politica && (
+                        <Text size="xs" color="red">
+                          {errors.aceitou_politica.message}
+                        </Text>
+                      )}
+                    </Stack>
+                  )}
+                />
+
+                <Accordion variant="contained" radius="md" chevronPosition="right">
+                  <Accordion.Item value="politica">
+                    <Accordion.Control>
+                      <Text size="sm" fw={600} className="text-stone-600">
+                        Ver detalhes da Política de Cancelamento
+                      </Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Stack gap="md">
+                        <div>
+                          <Text size="sm" fw={700} className="text-stone-700">
+                            Prazo Legal de Arrependimento (Até 7 dias após a compra):
+                          </Text>
+                          <Text size="sm" className="text-stone-500">
+                            Reembolso integral (R$ 120,00) para desistências
+                            informadas em até 7 dias corridos a contar da data
+                            do pagamento, desde que a solicitação ocorra antes
+                            do início da oficina.
+                          </Text>
+                        </div>
+                        <div>
+                          <Text size="sm" fw={700} className="text-stone-700">
+                            Após o prazo de 7 dias (Qualquer antecedência):
+                          </Text>
+                          <Text size="sm" className="text-stone-500">
+                            Não haverá reembolso do valor em dinheiro. A
+                            inscrição será transferida para a próxima data
+                            disponível mediante o pagamento de uma taxa de
+                            remarcação de 50% do valor da oficina.
+                          </Text>
+                        </div>
+                        <div>
+                          <Text size="sm" fw={700} className="text-stone-700">
+                            Menos de 48 horas ou Não Comparecimento:
+                          </Text>
+                          <Text size="sm" className="text-stone-500">
+                            Segue a mesma regra acima. Sem reembolso em
+                            dinheiro; transferência apenas mediante o pagamento
+                            da taxa de remarcação de 50%.
+                          </Text>
+                        </div>
+                      </Stack>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
               </Stack>
             </Stepper.Step>
           </Stepper>
